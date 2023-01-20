@@ -1,5 +1,12 @@
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path, { dirname } from 'node:path';
 import _ from 'lodash';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename);
 
 const stringify = (data, replacer = ' ', spacesCount = 1) => {
   const iter = (innerData, depth) => {
@@ -52,4 +59,4 @@ const genDiff = (file1, file2) => {
   return stringify(result);
 };
 
-export { genDiff, getData };
+export { getFixturePath, genDiff, getData };
