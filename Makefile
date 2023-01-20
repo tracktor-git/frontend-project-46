@@ -5,6 +5,8 @@ lint:
 fix:
 	npx eslint . --fix
 test:
-	NODE_OPTIONS=--experimental-vm-modules npx jest
+	npm test
+test-coverage:
+	npm test -- --coverage --coverageProvider=v8
 gendiff:
 	node bin/gendiff.js
