@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 import { program } from 'commander';
-import { getData, genDiff } from '../index.js';
+import parse from '../parsers.js';
+import { genDiff } from '../index.js';
 
 const showDiff = (filepath1, filepath2) => {
-  const file1 = getData(filepath1.trim());
-  const file2 = getData(filepath2.trim());
+  const file1 = parse(filepath1.trim());
+  const file2 = parse(filepath2.trim());
   const diff = genDiff(file1, file2);
   console.log(diff);
 };

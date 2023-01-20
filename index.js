@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path, { dirname } from 'node:path';
 import _ from 'lodash';
@@ -26,18 +25,6 @@ const stringify = (data, replacer = ' ', spacesCount = 1) => {
   return iter(data, 1);
 };
 
-const getData = (filepath) => {
-  const format = _.last(filepath.split('.'));
-  const data = readFileSync(filepath, 'utf-8');
-
-  switch (format) {
-    case 'json':
-      return JSON.parse(data);
-    default:
-      throw new Error('Not supported format');
-  }
-};
-
 const genDiff = (file1, file2) => {
   const keys1 = _.keys(file1).sort();
   const keys2 = _.keys(file2).sort();
@@ -59,4 +46,4 @@ const genDiff = (file1, file2) => {
   return stringify(result);
 };
 
-export { getFixturePath, genDiff, getData };
+export { getFixturePath, genDiff };
