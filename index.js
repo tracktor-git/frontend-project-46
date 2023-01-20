@@ -32,7 +32,8 @@ const getData = (filepath) => {
 };
 
 const genDiff = (file1, file2) => {
-  const [keys1, keys2] = [_.keys(file1).sort(), _.keys(file2).sort()];
+  const keys1 = _.keys(file1).sort();
+  const keys2 = _.keys(file2).sort();
 
   const obj1 = keys1.reduce((acc, key) => {
     if (keys2.includes(key)) {
