@@ -6,8 +6,8 @@ const diff1 = getFixturePath('diff1.txt');
 const expected = readFileSync(diff1, 'utf-8');
 
 test('Geneate flat diffs', () => {
-  const json1 = getFixturePath('file1.json');
-  const json2 = getFixturePath('file2.json');
+  const json1 = getFixturePath('flat1.json');
+  const json2 = getFixturePath('flat2.json');
   const yaml1 = getFixturePath('flat1.yaml');
   const yaml2 = getFixturePath('flat2.yml');
   const result1 = genDiff(parse(json1), parse(json2));
