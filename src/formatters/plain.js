@@ -17,22 +17,23 @@ const plain = (object, parent = '') => {
     const status = getStatus(value);
     const children = getChildren(value);
     const path = [parent, key].filter((item) => item).join('.');
+    let out = '';
     if (status === 'deleted') {
-      return `Property '${path}' was removed`;
+      out = `Property '${path}' was removed`;
     }
     if (status === 'updated') {
       const previous = generateString(children.previous);
       const current = generateString(children.current);
-      return `Property '${path}' was updated. From ${previous} to ${current}`;
+      out = `Property '${path}' was updated. From ${previous} to ${current}`;
     }
     if (status === 'added') {
-      const out = generateString(children);
-      return `Property '${path}' was added with value: ${out}`;
+      const added = generateString(children);
+      out = `Property '${path}' was added with value: ${added}`;
     }
     if (status === 'nested') {
-      return plain(children, path);
+      out = plain(children, path);
     }
-    return '';
+    return out;
   });
   return result.filter((item) => item).join('\n');
 };

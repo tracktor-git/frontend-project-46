@@ -37,9 +37,8 @@ const stylish = (object) => {
       const { startIndent } = getIndents(status, ' ', depth * REPLACER_REPEAT_COUNT);
       const statusKey = statusKeys[status] ?? '';
       if (status === 'updated') {
-        const deleted = `${startIndent}${statusKey.previous}${key}: ${iter(children.previous, depth + 1)}`;
-        const added = `${startIndent}${statusKey.current}${key}: ${iter(children.current, depth + 1)}`;
-        return `${deleted}\n${added}`;
+        return `${startIndent}${statusKey.previous}${key}: ${iter(children.previous, depth + 1)}\n`
+        + `${startIndent}${statusKey.current}${key}: ${iter(children.current, depth + 1)}`;
       }
       return `${startIndent}${statusKey}${key}: ${iter(children, depth + 1)}`;
     });
