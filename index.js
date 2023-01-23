@@ -7,43 +7,30 @@ const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename);
 
-const stringify = (data, replacer = ' ', spacesCount = 1) => {
-  const iter = (innerData, depth) => {
-    if (!_.isObject(innerData)) {
-      return `${innerData}`;
-    }
-
-    const entries = Object.entries(innerData);
-    const strings = entries.map(([key, value]) => {
-      const startIndent = replacer.repeat(depth * spacesCount);
-      return `${startIndent}${key}: ${iter(value, depth + 1)}`;
-    });
-    const endIndent = replacer.repeat((depth - 1) * spacesCount);
-    const result = ['{', ...strings, `${endIndent}}`].join('\n');
-    return result;
-  };
-  return iter(data, 1);
-};
-
 const genDiff = (file1, file2) => {
-  const keys1 = _.keys(file1).sort();
-  const keys2 = _.keys(file2).sort();
+  const keys1 = _.keys(file1);
+  const keys2 = _.keys(file2);
 
-  const obj1 = keys1.reduce((acc, key) => {
+  const diff1 = keys1.reduce((acc, key) => {
+    const [value1, value2] = [file1[key], file2[key]];
     if (keys2.includes(key)) {
-      return file1[key] === file2[key]
-        ? { ...acc, [`  ${key}`]: file1[key] }
-        : { ...acc, [`- ${key}`]: file1[key], [`+ ${key}`]: file2[key] };
+      if (_.isEqual(value1, value2)) {
+        return { ...acc, [key]: { status: 'unmodified', children: value1 } };
+      }
+      if (_.isObject(value1) && _.isObject(value2)) {
+        return { ...acc, [key]: { status: 'nested', children: genDiff(value1, value2) } };
+      }
+      return { ...acc, [key]: { status: 'updated', previous: value1, current: value2 } };
     }
-    return { ...acc, [`- ${key}`]: file1[key] };
+    return { ...acc, [key]: { status: 'deleted', children: value1 } };
   }, {});
 
-  const obj2 = keys2.reduce((acc, key) => (!keys1.includes(key)
-    ? { ...acc, [`+ ${key}`]: file2[key] }
-    : { ...acc }), {});
+  const diff2 = keys2.reduce((acc2, key2) => {
+    const result = { ...acc2, [key2]: { status: 'added', children: file2[key2] } };
+    return !keys1.includes(key2) ? result : acc2;
+  }, {});
 
-  const result = { ...obj1, ...obj2 };
-  return stringify(result);
+  return { ...diff1, ...diff2 };
 };
 
 export { getFixturePath, genDiff };

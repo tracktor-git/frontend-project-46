@@ -3,18 +3,27 @@
 import { program } from 'commander';
 import parse from '../parsers.js';
 import { genDiff } from '../index.js';
+import stylish from '../stylish.js';
 
-const showDiff = (filepath1, filepath2) => {
+const makeDiff = (filepath1, filepath2) => {
   const file1 = parse(filepath1.trim());
   const file2 = parse(filepath2.trim());
   const diff = genDiff(file1, file2);
-  console.log(diff);
+  return diff;
+};
+
+const showDiff = (filepath1, filepath2) => {
+  const result = makeDiff(filepath1, filepath2);
+  const { format } = program.opts();
+  if (format === 'stylish') {
+    console.log(stylish(result));
+  }
 };
 
 program
   .description('Compares two configuration files and shows a difference.')
   .version('0.0.1')
-  .option('-f, --format <type>', 'output format')
+  .option('-f, --format [type]', 'output format', 'stylish')
   .action(showDiff)
   .arguments('<filepath1> <filepath2>');
 
