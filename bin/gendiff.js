@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 import { program } from 'commander';
+import { genDiff } from '../src/index.js';
 import parse from '../parsers.js';
-import { genDiff } from '../index.js';
-import stylish from '../stylish.js';
+import stylish from '../src/formatters/stylish.js';
+import plain from '../src/formatters/plain.js';
 
 const makeDiff = (filepath1, filepath2) => {
   const file1 = parse(filepath1.trim());
@@ -17,6 +18,9 @@ const showDiff = (filepath1, filepath2) => {
   const { format } = program.opts();
   if (format === 'stylish') {
     console.log(stylish(result));
+  }
+  if (format === 'plain') {
+    console.log(plain(result));
   }
 };
 

@@ -1,11 +1,7 @@
-import { fileURLToPath } from 'node:url';
-import path, { dirname } from 'node:path';
 import _ from 'lodash';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename);
+const getStatus = (item) => item.status ?? null;
+const getChildren = (item) => item.children ?? item;
 
 const genDiff = (file1, file2) => {
   const keys1 = _.keys(file1);
@@ -33,4 +29,4 @@ const genDiff = (file1, file2) => {
   return { ...diff1, ...diff2 };
 };
 
-export { getFixturePath, genDiff };
+export { genDiff, getStatus, getChildren };
