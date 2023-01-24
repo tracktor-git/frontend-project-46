@@ -14,7 +14,7 @@ const generateString = (item) => {
 const plain = (object, parent = '') => {
   const entries = _.entries(object);
   const sortedEnntries = _.sortBy(entries);
-  const result = sortedEnntries.map(([key, value]) => {
+  return sortedEnntries.map(([key, value]) => {
     const status = getStatus(value);
     const children = getChildren(value);
     const path = [parent, key].filter((item) => item).join('.');
@@ -34,8 +34,8 @@ const plain = (object, parent = '') => {
       return plain(children, path);
     }
     return null;
-  });
-  return result.filter((item) => item).join('\n');
+  })
+    .filter((item) => item).join('\n');
 };
 
 export default plain;
