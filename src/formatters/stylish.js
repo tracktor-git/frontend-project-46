@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getStatus, getChildren } from '../index.js';
+import { getStatus, getChildren, getIndents } from '../utils.js';
 
 const statusKeys = {
   nested: '',
@@ -7,18 +7,6 @@ const statusKeys = {
   added: '+ ',
   removed: '- ',
   updated: { previous: '- ', current: '+ ' },
-};
-
-const getIndents = (status, replacer, count) => {
-  const STATUS_KEY_LENGTH = 2;
-  const indents = {};
-  if (status === 'updated' || status === 'removed' || status === 'added') {
-    indents.startIndent = replacer.repeat(count - STATUS_KEY_LENGTH);
-  } else {
-    indents.startIndent = replacer.repeat(count);
-  }
-  indents.endIndent = replacer.repeat(count);
-  return indents;
 };
 
 const stylish = (object) => {

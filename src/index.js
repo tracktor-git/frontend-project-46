@@ -1,7 +1,8 @@
 import _ from 'lodash';
-
-const getStatus = (item) => item.status ?? null;
-const getChildren = (item) => item.children ?? item;
+import parse from '../parsers.js';
+import stylish from './formatters/stylish.js';
+import plain from './formatters/plain.js';
+import json from './formatters/json.js';
 
 const genDiff = (file1, file2) => {
   const keys1 = _.keys(file1);
@@ -29,4 +30,27 @@ const genDiff = (file1, file2) => {
   return { ...diff1, ...diff2 };
 };
 
-export { genDiff, getStatus, getChildren };
+const makeDiff = (filepath1, filepath2) => {
+  const file1 = parse(filepath1);
+  const file2 = parse(filepath2);
+  const diffTree = genDiff(file1, file2);
+  return diffTree;
+};
+
+const showDiff = (filepath1, filepath2, format = 'stylish') => {
+  const diff = makeDiff(filepath1, filepath2);
+
+  switch (format) {
+    case 'plain':
+      return plain(diff);
+    case 'json':
+      return json(diff);
+    case 'stylish':
+      return stylish(diff);
+    default:
+      throw new Error('Unknown format');
+  }
+};
+
+export { genDiff };
+export default showDiff;

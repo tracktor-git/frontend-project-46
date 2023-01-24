@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getStatus, getChildren } from '../index.js';
+import { getStatus, getChildren } from '../utils.js';
 
 const generateString = (item) => {
   if (_.isObject(item)) {
