@@ -19,4 +19,4 @@ $ make install
 $ sudo npm link
 ````
 ## Demonstration
-[![asciicast](https://asciinema.org/a/op3ZhqlL74eei5uX2K6mSPv91.svg)](https://asciinema.org/a/op3ZhqlL74eei5uX2K6mSPv91)
+[![asciicast](https://asciinema.org/a/CkQ1qMhyR7qhwiZoLPtii7bPi.svg)](https://asciinema.org/a/CkQ1qMhyR7qhwiZoLPtii7bPi)

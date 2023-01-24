@@ -5,20 +5,19 @@ const json = (object) => {
   const iter = (data) => {
     const entries = _.entries(data);
     const sortedEntries = entries.sort();
-    const result = sortedEntries.map(([key, value]) => {
+    return sortedEntries.map(([name, value]) => {
       const status = getStatus(value);
       const children = getChildren(value);
       if (status === 'nested') {
-        return { name: key, status, children: iter(children) };
+        return { name, status, children: iter(children) };
       }
       if (status === 'updated') {
         return {
-          name: key, status, previous: children.previous, current: children.current,
+          name, status, previous: children.previous, current: children.current,
         };
       }
-      return { name: key, status, value: children };
+      return { name, status, value: children };
     });
-    return result;
   };
   const output = iter(object);
   return JSON.stringify(output);
