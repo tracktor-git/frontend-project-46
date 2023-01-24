@@ -4,7 +4,7 @@ import { getStatus, getChildren } from '../utils.js';
 const json = (object) => {
   const iter = (data) => {
     const entries = _.entries(data);
-    const sortedEntries = entries.sort();
+    const sortedEntries = _.sortBy(entries);
     return sortedEntries.map(([name, value]) => {
       const status = getStatus(value);
       const children = getChildren(value);
