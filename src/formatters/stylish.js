@@ -17,9 +17,10 @@ const stylish = (object) => {
 
     const REPLACER_REPEAT_COUNT = 4;
     const { endIndent } = getIndents(null, ' ', (depth - 1) * REPLACER_REPEAT_COUNT);
-    const entries = _.entries(data).sort();
+    const entries = _.entries(data);
+    const sortedEntries = _.sortBy(entries);
 
-    const result = entries.map(([key, value]) => {
+    const result = sortedEntries.map(([key, value]) => {
       const status = getStatus(value);
       const children = getChildren(value);
       const { startIndent } = getIndents(status, ' ', depth * REPLACER_REPEAT_COUNT);
