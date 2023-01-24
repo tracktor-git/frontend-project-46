@@ -3,8 +3,9 @@ import { getStatus, getChildren } from '../index.js';
 
 const json = (object) => {
   const iter = (data) => {
-    const entries = _.entries(data).sort();
-    const result = entries.map(([key, value]) => {
+    const entries = _.entries(data);
+    const sortedEntries = entries.sort();
+    const result = sortedEntries.map(([key, value]) => {
       const status = getStatus(value);
       const children = getChildren(value);
       if (status === 'nested') {
