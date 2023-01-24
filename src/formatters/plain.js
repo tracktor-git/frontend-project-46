@@ -18,7 +18,7 @@ const plain = (object, parent = '') => {
     const children = getChildren(value);
     const path = [parent, key].filter((item) => item).join('.');
     let out = '';
-    if (status === 'deleted') {
+    if (status === 'removed') {
       out = `Property '${path}' was removed`;
     }
     if (status === 'updated') {

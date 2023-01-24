@@ -5,14 +5,14 @@ const statusKeys = {
   nested: '',
   unmodified: '',
   added: '+ ',
-  deleted: '- ',
+  removed: '- ',
   updated: { previous: '- ', current: '+ ' },
 };
 
 const getIndents = (status, replacer, count) => {
   const STATUS_KEY_LENGTH = 2;
   const indents = {};
-  if (status === 'updated' || status === 'deleted' || status === 'added') {
+  if (status === 'updated' || status === 'removed' || status === 'added') {
     indents.startIndent = replacer.repeat(count - STATUS_KEY_LENGTH);
   } else {
     indents.startIndent = replacer.repeat(count);

@@ -18,7 +18,7 @@ const genDiff = (file1, file2) => {
       }
       return { ...acc, [key]: { status: 'updated', previous: value1, current: value2 } };
     }
-    return { ...acc, [key]: { status: 'deleted', children: value1 } };
+    return { ...acc, [key]: { status: 'removed', children: value1 } };
   }, {});
 
   const diff2 = keys2.reduce((acc2, key2) => {

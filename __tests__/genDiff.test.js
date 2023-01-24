@@ -5,6 +5,7 @@ import { genDiff } from '../src/index.js';
 import parse from '../parsers.js';
 import stylish from '../src/formatters/stylish.js';
 import plain from '../src/formatters/plain.js';
+import json from '../src/formatters/json.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,8 +14,10 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 
 
 const diff = getFixturePath('diff.txt');
 const plainDiff = getFixturePath('plain.txt');
+const jsonDiff = getFixturePath('json.txt');
 const expected1 = readFileSync(diff, 'utf-8');
 const expected2 = readFileSync(plainDiff, 'utf-8');
+const expected3 = readFileSync(jsonDiff, 'utf-8');
 
 test('Geneate nested diffs', () => {
   const json1 = getFixturePath('nested1.json');
@@ -24,13 +27,16 @@ test('Geneate nested diffs', () => {
   const result1 = stylish(genDiff(parse(json1), parse(json2)));
   const result2 = stylish(genDiff(parse(yaml1), parse(yaml2)));
   const result3 = plain(genDiff(parse(json1), parse(json2)));
+  const result4 = json(genDiff(parse(json1), parse(json2)));
 
   expect(result1).toBe(expected1);
   expect(result2).toBe(expected1);
   expect(result3).toBe(expected2);
+  expect(result4).toBe(expected3);
   expect(typeof result1).toBe('string');
   expect(typeof result2).toBe('string');
   expect(typeof result3).toBe('string');
+  expect(typeof result4).toBe('string');
 });
 
 test('Throws on invalid file extension', () => {
