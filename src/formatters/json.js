@@ -21,7 +21,8 @@ const json = (data) => {
     return { name, status, value };
   });
   const clone = _.cloneDeep(data);
-  return JSON.stringify(iter(clone));
+  const result = JSON.stringify(iter(clone));
+  return result;
 };
 
 export default json;

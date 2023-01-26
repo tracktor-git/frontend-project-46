@@ -32,11 +32,8 @@ const plain = (data, parent = '') => {
       const added = generateString(value);
       return `Property '${path}' was added with value: ${added}`;
     }
-    if (status === 'nested') {
-      const children = getChildren(node);
-      return plain(children, path);
-    }
-    return null;
+    const children = getChildren(node);
+    return status === 'nested' ? plain(children, path) : null;
   }).filter((item) => item).join('\n');
 };
 
