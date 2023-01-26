@@ -1,13 +1,7 @@
-const getStatus = (item) => item.status ?? null;
+export const getKey = (node) => node.key;
 
-const getChildren = (item) => item.children ?? item;
+export const getChildren = (node) => node.children;
 
-const getIndents = (status, replacer, count) => {
-  const statusesWithLessIndent = ['updated', 'removed', 'added'];
-  const STATUS_KEY_LENGTH = (statusesWithLessIndent.includes(status)) ? 2 : 0;
-  const startIndent = replacer.repeat(count - STATUS_KEY_LENGTH);
-  const endIndent = replacer.repeat(count);
-  return { startIndent, endIndent };
-};
+export const getStatus = (node) => node.status;
 
-export { getStatus, getChildren, getIndents };
+export const getValue = (node) => node.value;

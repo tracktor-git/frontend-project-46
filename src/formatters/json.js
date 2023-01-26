@@ -1,26 +1,27 @@
 import _ from 'lodash';
-import { getStatus, getChildren } from '../utils.js';
+import {
+  getStatus, getChildren, getKey, getValue,
+} from '../utils.js';
 
-const json = (object) => {
-  const iter = (data) => {
-    const entries = _.entries(data);
-    const sortedEntries = _.sortBy(entries);
-    return sortedEntries.map(([name, value]) => {
-      const status = getStatus(value);
-      const children = getChildren(value);
-      if (status === 'nested') {
-        return { name, status, children: iter(children) };
-      }
-      if (status === 'updated') {
-        return {
-          name, status, previous: children.previous, current: children.current,
-        };
-      }
-      return { name, status, value: children };
-    });
-  };
-  const output = iter(object);
-  return JSON.stringify(output);
+const json = (data) => {
+  const iter = (item) => item.map((node) => {
+    const status = getStatus(node);
+    const children = getChildren(node);
+    const name = getKey(node);
+    if (status === 'nested') {
+      return { name, status, children: iter(children) };
+    }
+    if (status === 'updated') {
+      const { previous, current } = node;
+      return {
+        name, status, previous, current,
+      };
+    }
+    const value = getValue(node);
+    return { name, status, value };
+  });
+  const clone = _.cloneDeep(data);
+  return JSON.stringify(iter(clone));
 };
 
 export default json;
