@@ -17,12 +17,11 @@ const generateDiffTree = (data1, data2) => {
     if (_.isEqual(value1, value2)) {
       return { key, status: 'unmodified', value: value2 };
     }
-    if (_.isObject(value1) && _.isObject(value2)) {
-      return { key, status: 'nested', children: generateDiffTree(value1, value2) };
-    }
-    return {
-      key, status: 'updated', previous: value1, current: value2,
-    };
+    return (_.isObject(value1) && _.isObject(value2))
+      ? { key, status: 'nested', children: generateDiffTree(value1, value2) }
+      : {
+        key, status: 'updated', previous: value1, current: value2,
+      };
   });
 };
 
