@@ -1,38 +1,18 @@
-import _ from 'lodash';
-import parse from '../parsers.js';
+import { readFileSync } from 'node:fs';
+import parse from './parsers.js';
 import stylish from './formatters/stylish.js';
 import plain from './formatters/plain.js';
 import json from './formatters/json.js';
+import generateDiffTree from './generateDiffTree.js';
 
-const generateDiffTree = (data1, data2) => {
-  const keys1 = _.keys(data1);
-  const keys2 = _.keys(data2);
-  const keys = _.uniq(_.concat(keys1, keys2));
-
-  return _.sortBy(keys).map((key) => {
-    const value1 = data1[key];
-    const value2 = data2[key];
-    if (!_.has(data1, key)) {
-      return { key, status: 'added', value: value2 };
-    }
-    if (!_.has(data2, key)) {
-      return { key, status: 'removed', value: value1 };
-    }
-    if (_.isEqual(value1, value2)) {
-      return { key, status: 'unmodified', value: value2 };
-    }
-    if (_.isObject(value1) && _.isObject(value2)) {
-      return { key, status: 'nested', children: generateDiffTree(value1, value2) };
-    }
-    return {
-      key, status: 'updated', previous: value1, current: value2,
-    };
-  });
-};
+export const getExtension = (filename) => filename.split('.').at(-1);
+export const getData = (filepath) => readFileSync(filepath, 'utf-8');
 
 const makeDiff = (filepath1, filepath2) => {
-  const file1 = parse(filepath1);
-  const file2 = parse(filepath2);
+  const data1 = getData(filepath1);
+  const data2 = getData(filepath2);
+  const file1 = parse(data1, getExtension(filepath1));
+  const file2 = parse(data2, getExtension(filepath2));
   const diffTree = generateDiffTree(file1, file2);
   return diffTree;
 };

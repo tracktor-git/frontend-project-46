@@ -1,7 +1,4 @@
 import _ from 'lodash';
-import {
-  getStatus, getChildren, getKey, getValue,
-} from '../utils.js';
 
 export const getStatusIcon = (status) => {
   switch (status) {
@@ -33,11 +30,8 @@ const stringify = (object, replacer, repeatCount) => {
 };
 
 const stylish = (data, depth = 1, replacer = ' ', repeatCount = 4) => {
-  const clone = _.cloneDeep(data);
-  const lines = clone.map((item) => {
-    const key = getKey(item);
-    const status = getStatus(item);
-    const value = getValue(item);
+  const lines = data.map((item) => {
+    const { key, status, value } = item;
     const lineIndent = status === 'nested'
       ? replacer.repeat((depth * repeatCount))
       : replacer.repeat((depth * repeatCount) - 2);
@@ -53,7 +47,7 @@ const stylish = (data, depth = 1, replacer = ' ', repeatCount = 4) => {
       const deleted = `${lineIndent}${minusIcon}${key}: ${stringify(previous, ' ', (depth * repeatCount) + repeatCount)}`;
       return [deleted, added].join('\n');
     }
-    const children = getChildren(item);
+    const { children } = item;
     return `${lineIndent}${key}: ${stylish(children, depth + 1)}`;
   });
   const braceIndent = replacer.repeat((depth - 1) * repeatCount);
