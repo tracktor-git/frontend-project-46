@@ -10,48 +10,49 @@ export const getStatusIcon = (status) => {
     case 'added':
       return '+ ';
     default:
-      throw new Error('Invalid status');
+      return '';
   }
 };
 
-const stringify = (object, replacer, repeatCount) => {
-  if (!_.isObject(object)) {
-    return `${object}`;
-  }
-  const lineIndent = replacer.repeat(repeatCount);
-  const lines = _.entries(object).map(([key, value]) => {
-    const outputValue = stringify(value, replacer, repeatCount + 4);
-    const outputString = `${lineIndent}${key}: ${outputValue}`;
-    return outputString;
-  });
+const getIndents = (depth, repeatCount = 4, replacer = ' ') => replacer.repeat(depth * repeatCount);
 
-  const braceIndent = replacer.repeat(repeatCount - 4);
-  return ['{', ...lines, `${braceIndent}}`].join('\n');
+const stringify = (node, depth = 1) => {
+  if (!_.isObject(node)) {
+    return String(node);
+  }
+  const lineIndents = getIndents(depth);
+  const braceIndents = getIndents(depth - 1);
+  const lines = _.entries(node).map(([key, value]) => `${lineIndents}${key}: ${stringify(value, depth + 1)}`);
+  return ['{', ...lines, `${braceIndents}}`].join('\n');
 };
 
-const stylish = (data, depth = 1, replacer = ' ', repeatCount = 4) => {
-  const lines = data.map((item) => {
-    const { key, status, value } = item;
-    const lineIndent = status === 'nested'
-      ? replacer.repeat((depth * repeatCount))
-      : replacer.repeat((depth * repeatCount) - 2);
-    if (status === 'added' || status === 'unmodified' || status === 'removed') {
-      const icon = getStatusIcon(status);
-      return `${lineIndent}${icon}${key}: ${stringify(value, ' ', (depth * repeatCount) + repeatCount)}`;
+const stylish = (nodes, depth = 1) => {
+  const lineIndents = getIndents(depth).slice(0, -2);
+  const braceIndents = getIndents(depth - 1);
+  const result = nodes.map((node) => {
+    const {
+      key, status, value, children, previous, current,
+    } = node;
+    const icon = getStatusIcon(status);
+    switch (status) {
+      case 'removed':
+      case 'added':
+      case 'unmodified':
+        return `${lineIndents}${icon}${key}: ${stringify(value, depth + 1)}`;
+      case 'updated':
+        return [
+          `${lineIndents}- ${key}: ${stringify(previous, depth + 1)}`,
+          `${lineIndents}+ ${key}: ${stringify(current, depth + 1)}`,
+        ].join('\n');
+      case 'nested':
+        return `${lineIndents}${icon}${key}: ${stylish(children, depth + 1)}`;
+      default:
+        return null;
     }
-    if (status === 'updated') {
-      const { previous, current } = item;
-      const plusIcon = getStatusIcon('added');
-      const minusIcon = getStatusIcon('removed');
-      const added = `${lineIndent}${plusIcon}${key}: ${stringify(current, ' ', (depth * repeatCount) + repeatCount)}`;
-      const deleted = `${lineIndent}${minusIcon}${key}: ${stringify(previous, ' ', (depth * repeatCount) + repeatCount)}`;
-      return [deleted, added].join('\n');
-    }
-    const { children } = item;
-    return `${lineIndent}${key}: ${stylish(children, depth + 1)}`;
   });
-  const braceIndent = replacer.repeat((depth - 1) * repeatCount);
-  return ['{', ...lines, `${braceIndent}}`].join('\n');
+  return ['{', ...result, `${braceIndents}}`]
+    .filter((item) => !_.isNull(item))
+    .join('\n');
 };
 
 export default stylish;
