@@ -45,14 +45,11 @@ const stylish = (nodes, depth = 1) => {
           `${lineIndents}+ ${key}: ${stringify(current, depth + 1)}`,
         ].join('\n');
       case 'nested':
-        return `${lineIndents}${icon}${key}: ${stylish(children, depth + 1)}`;
       default:
-        return null;
+        return `${lineIndents}${icon}${key}: ${stylish(children, depth + 1)}`;
     }
   });
-  return ['{', ...result, `${braceIndents}}`]
-    .filter((item) => !_.isNull(item))
-    .join('\n');
+  return ['{', ...result, `${braceIndents}}`].join('\n');
 };
 
 export default stylish;
