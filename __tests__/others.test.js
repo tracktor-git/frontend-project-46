@@ -1,6 +1,7 @@
 import parse from '../src/parser.js';
 import getFormattedData from '../src/formatters/index.js';
 import stylish from '../src/formatters/stylish.js';
+import plain from '../src/formatters/plain.js';
 
 test('Throws errors', () => {
   const checkParse = () => parse('some string', 'mp3');
@@ -11,7 +12,10 @@ test('Throws errors', () => {
   const error2 = new Error('Unsupported format: unknown');
   expect(checkGetFormattedData).toThrow(error2);
 
-  const checkStylish = () => stylish([{ key: 'test', status: 'unsupported', value: null }]);
+  const data = [{ key: 'test', status: 'unsupported', value: null }];
+  const checkStylish = () => stylish(data);
+  const checkPlain = () => plain(data);
   const error3 = new Error('Invalid node status: unsupported!');
   expect(checkStylish).toThrow(error3);
+  expect(checkPlain).toThrow(error3);
 });

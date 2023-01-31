@@ -16,17 +16,21 @@ const plain = (data, parent = '') => data.map((node) => {
   const {
     previous, current, value, children,
   } = node;
-  if (status === 'removed') {
-    return `Property '${path}' was removed`;
+  switch (status) {
+    case 'unmodified':
+      break;
+    case 'removed':
+      return `Property '${path}' was removed`;
+    case 'updated':
+      return `Property '${path}' was updated. From ${generateString(previous)} to ${generateString(current)}`;
+    case 'added':
+      return `Property '${path}' was added with value: ${generateString(value)}`;
+    case 'nested':
+      return plain(children, path);
+    default:
+      throw new Error(`Invalid node status: ${status}!`);
   }
-  if (status === 'updated') {
-    return `Property '${path}' was updated. From ${generateString(previous)} to ${generateString(current)}`;
-  }
-  if (status === 'added') {
-    const added = generateString(value);
-    return `Property '${path}' was added with value: ${added}`;
-  }
-  return status === 'nested' ? plain(children, path) : null;
+  return null;
 }).filter((item) => item).join('\n');
 
 export default plain;
