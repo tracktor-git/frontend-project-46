@@ -1,6 +1,7 @@
 import stylish from './stylish.js';
-import json from './json.js';
 import plain from './plain.js';
+
+export const json = (data) => JSON.stringify(data);
 
 const getFormattedData = (diff, format) => {
   const formatters = { plain, json, stylish };

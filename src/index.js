@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
-import parse from './parsers.js';
+import parse from './parser.js';
 import generateDiffTree from './generateDiffTree.js';
 import getFormattedData from './formatters/index.js';
 
-export const getExtension = (filename) => filename.split('.').at(-1);
+export const getExtension = (filename) => filename.split('.').filter(String).at(-1);
 export const getData = (filepath) => readFileSync(filepath, 'utf-8');
 
 const makeDiff = (filepath1, filepath2, format = 'stylish') => {
